@@ -159,7 +159,7 @@ jobs:
 
             const fmt = (v) => (v != null ? `${v.toFixed(2)}ms` : 'N/A');
             const fmtRate = (v) => (v != null ? v.toFixed(1) : 'N/A');
-            const getMetric = (summary, name) => summary.metrics?.[name]?.values || {};
+            const getMetric = (summary, name) => summary.metrics?.[name] || {};
 
             const healthDuration = getMetric(healthSummary, 'http_req_duration');
             const apiDuration = getMetric(apiSummary, 'http_req_duration');
@@ -183,7 +183,7 @@ jobs:
               `| **Avg Latency** | ${fmt(healthDuration.avg)} | ${fmt(apiDuration.avg)} | ${fmt(stressDuration.avg)} |`,
               `| **Min Latency** | ${fmt(healthDuration.min)} | ${fmt(apiDuration.min)} | ${fmt(stressDuration.min)} |`,
               `| **Requests/sec** | ${fmtRate(healthReqs.rate)} | ${fmtRate(apiReqs.rate)} | ${fmtRate(stressReqs.rate)} |`,
-              `| **Error Rate** | ${fmtRate(healthFailed.rate ? healthFailed.rate * 100 : 0)}% | ${fmtRate(apiFailed.rate ? apiFailed.rate * 100 : 0)}% | ${fmtRate(stressFailed.rate ? stressFailed.rate * 100 : 0)}% |`,
+              `| **Error Rate** | ${fmtRate(healthFailed.value != null ? healthFailed.value * 100 : 0)}% | ${fmtRate(apiFailed.value != null ? apiFailed.value * 100 : 0)}% | ${fmtRate(stressFailed.value != null ? stressFailed.value * 100 : 0)}% |`,
               '',
               '<details><summary>ℹ️ Test Configuration</summary>',
               '',
