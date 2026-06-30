@@ -113,9 +113,13 @@ export function setup() {
 
   // Quick sanity check: hit /health to make sure the server is reachable
   const healthRes = http.get(`${BASE_URL}/health`);
-  check(healthRes, {
+  const isHealthy = check(healthRes, {
     'setup: server is reachable': (r) => r.status === 200,
   });
+
+  if (!isHealthy) {
+    throw new Error(`API is unreachable at ${BASE_URL}/health. Setup aborted.`);
+  }
 
   return { token };
 }
