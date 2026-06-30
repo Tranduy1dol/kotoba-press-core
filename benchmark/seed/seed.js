@@ -2,14 +2,14 @@
 // MongoDB seed script for kotoba-press-core benchmarks.
 // Run with: mongosh mongodb://localhost:27017/learning_japanese seed.js
 
-const db = db.getSiblingDB("learning_japanese");
+const localDb = db.getSiblingDB("learning_japanese");
 
 // ---------------------------------------------------------------------------
 // Words collection
 // ---------------------------------------------------------------------------
-db.words.drop();
+localDb.words.drop();
 
-db.words.insertMany([
+localDb.words.insertMany([
   {
     _id: ObjectId("000000000000000000000001"),
     kanji: "食べる",
@@ -77,9 +77,9 @@ print("✅  Inserted 5 words into 'words' collection.");
 // ---------------------------------------------------------------------------
 // Grammars collection
 // ---------------------------------------------------------------------------
-db.grammars.drop();
+localDb.grammars.drop();
 
-db.grammars.insertMany([
+localDb.grammars.insertMany([
   {
     _id: ObjectId("000000000000000000000011"),
     title: "〜てもいい",
@@ -120,9 +120,9 @@ print("✅  Inserted 3 grammars into 'grammars' collection.");
 // ---------------------------------------------------------------------------
 // Users collection (benchmark user)
 // ---------------------------------------------------------------------------
-db.users.drop();
+localDb.users.drop();
 
-db.users.insertOne({
+localDb.users.insertOne({
   _id: ObjectId("000000000000000000000099"),
   google_id: "bench-google-id",
   email: "bench@test.com",
