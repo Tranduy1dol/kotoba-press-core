@@ -55,10 +55,15 @@ func (h *GrammarHandler) GetGrammar(ctx *gin.Context) {
 // @Security    BearerAuth
 // @Router      /grammar [get]
 func (h *GrammarHandler) ListGrammar(ctx *gin.Context) {
-	var param dto.JLPTLevelParam
-	if err := ctx.ShouldBindUri(&param); err != nil {
+	var query struct {
+		Level int `form:"jlpt,default=5" binding:"omitempty,min=1,max=5"`
+	}
+	if err := ctx.ShouldBindQuery(&query); err != nil {
 		apperror.Response(ctx, apperror.FromValidationError(err))
 		return
+	}
+	if query.Level == 0 {
+		query.Level = 5 // default
 	}
 
 	var page dto.PaginationQuery
@@ -67,7 +72,7 @@ func (h *GrammarHandler) ListGrammar(ctx *gin.Context) {
 		return
 	}
 
-	grammars, err := h.lookupSvc.ListGrammarByJLPT(ctx.Request.Context(), param.Level, page.Limit)
+	grammars, err := h.lookupSvc.ListGrammarByJLPT(ctx.Request.Context(), query.Level, page.Limit)
 	if err != nil {
 		apperror.Response(ctx, err)
 		return
