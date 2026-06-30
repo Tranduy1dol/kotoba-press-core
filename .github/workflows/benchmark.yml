@@ -114,6 +114,15 @@ jobs:
             --summary-export=benchmark/results/api-summary.json \
             benchmark/k6/api_endpoints.js
 
+      - name: "Stress test: API endpoints"
+        run: |
+          k6 run \
+            --env BASE_URL=http://localhost:8080 \
+            --env JWT_SECRET=bench-secret-key-for-ci-testing \
+            --out json=benchmark/results/stress.json \
+            --summary-export=benchmark/results/stress-summary.json \
+            benchmark/k6/stress.js
+
       # ------------------------------------------------------------------
       # Results
       # ------------------------------------------------------------------
@@ -134,10 +143,12 @@ jobs:
 
             let healthSummary = {};
             let apiSummary = {};
+            let stressSummary = {};
 
             try {
               healthSummary = JSON.parse(fs.readFileSync('benchmark/results/health-summary.json', 'utf8'));
               apiSummary = JSON.parse(fs.readFileSync('benchmark/results/api-summary.json', 'utf8'));
+              stressSummary = JSON.parse(fs.readFileSync('benchmark/results/stress-summary.json', 'utf8'));
             } catch (e) {
               console.log('Could not read summary files:', e.message);
               return;
@@ -149,31 +160,36 @@ jobs:
 
             const healthDuration = getMetric(healthSummary, 'http_req_duration');
             const apiDuration = getMetric(apiSummary, 'http_req_duration');
+            const stressDuration = getMetric(stressSummary, 'http_req_duration');
             const healthReqs = getMetric(healthSummary, 'http_reqs');
             const apiReqs = getMetric(apiSummary, 'http_reqs');
+            const stressReqs = getMetric(stressSummary, 'http_reqs');
             const healthFailed = getMetric(healthSummary, 'http_req_failed');
             const apiFailed = getMetric(apiSummary, 'http_req_failed');
+            const stressFailed = getMetric(stressSummary, 'http_req_failed');
 
             const body = [
               '## 📊 Benchmark Results',
               '',
-              '| Metric | Health Check | API Endpoints |',
-              '|--------|-------------|---------------|',
-              `| **p50 Latency** | ${fmt(healthDuration['p(50)'])} | ${fmt(apiDuration['p(50)'])} |`,
-              `| **p95 Latency** | ${fmt(healthDuration['p(95)'])} | ${fmt(apiDuration['p(95)'])} |`,
-              `| **p99 Latency** | ${fmt(healthDuration['p(99)'])} | ${fmt(apiDuration['p(99)'])} |`,
-              `| **Max Latency** | ${fmt(healthDuration.max)} | ${fmt(apiDuration.max)} |`,
-              `| **Avg Latency** | ${fmt(healthDuration.avg)} | ${fmt(apiDuration.avg)} |`,
-              `| **Min Latency** | ${fmt(healthDuration.min)} | ${fmt(apiDuration.min)} |`,
-              `| **Requests/sec** | ${fmtRate(healthReqs.rate)} | ${fmtRate(apiReqs.rate)} |`,
-              `| **Error Rate** | ${fmtRate(healthFailed.rate ? healthFailed.rate * 100 : 0)}% | ${fmtRate(apiFailed.rate ? apiFailed.rate * 100 : 0)}% |`,
+              '| Metric | Health Check | API Endpoints | Stress Test |',
+              '|--------|-------------|---------------|-------------|',
+              `| **p50 Latency** | ${fmt(healthDuration['p(50)'])} | ${fmt(apiDuration['p(50)'])} | ${fmt(stressDuration['p(50)'])} |`,
+              `| **p95 Latency** | ${fmt(healthDuration['p(95)'])} | ${fmt(apiDuration['p(95)'])} | ${fmt(stressDuration['p(95)'])} |`,
+              `| **p99 Latency** | ${fmt(healthDuration['p(99)'])} | ${fmt(apiDuration['p(99)'])} | ${fmt(stressDuration['p(99)'])} |`,
+              `| **Max Latency** | ${fmt(healthDuration.max)} | ${fmt(apiDuration.max)} | ${fmt(stressDuration.max)} |`,
+              `| **Avg Latency** | ${fmt(healthDuration.avg)} | ${fmt(apiDuration.avg)} | ${fmt(stressDuration.avg)} |`,
+              `| **Min Latency** | ${fmt(healthDuration.min)} | ${fmt(apiDuration.min)} | ${fmt(stressDuration.min)} |`,
+              `| **Requests/sec** | ${fmtRate(healthReqs.rate)} | ${fmtRate(apiReqs.rate)} | ${fmtRate(stressReqs.rate)} |`,
+              `| **Error Rate** | ${fmtRate(healthFailed.rate ? healthFailed.rate * 100 : 0)}% | ${fmtRate(apiFailed.rate ? apiFailed.rate * 100 : 0)}% | ${fmtRate(stressFailed.rate ? stressFailed.rate * 100 : 0)}% |`,
               '',
               '<details><summary>ℹ️ Test Configuration</summary>',
               '',
-              '- **VUs**: 50 (constant)',
+              '- **Health & API VUs**: 50 (constant)',
               '- **Duration**: 30s',
+              '- **Stress VUs**: Ramps up to 200',
               '- **Health thresholds**: p95 < 200ms, error rate < 1%',
               '- **API thresholds**: p95 < 500ms, error rate < 1%',
+              '- **Stress thresholds**: p95 < 1000ms, error rate < 5%',
               '',
               '</details>',
               '',
