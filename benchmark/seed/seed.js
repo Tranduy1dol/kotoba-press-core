@@ -11,7 +11,7 @@ localDb.words.drop();
 
 localDb.words.insertMany([
   {
-    _id: ObjectId("000000000000000000000001"),
+    _id: "000000000000000000000001",
     kanji: "食べる",
     hiragana: "たべる",
     romaji: "taberu",
@@ -23,7 +23,7 @@ localDb.words.insertMany([
     ],
   },
   {
-    _id: ObjectId("000000000000000000000002"),
+    _id: "000000000000000000000002",
     kanji: "勉強",
     hiragana: "べんきょう",
     romaji: "benkyou",
@@ -35,7 +35,7 @@ localDb.words.insertMany([
     ],
   },
   {
-    _id: ObjectId("000000000000000000000003"),
+    _id: "000000000000000000000003",
     kanji: "経験",
     hiragana: "けいけん",
     romaji: "keiken",
@@ -47,7 +47,7 @@ localDb.words.insertMany([
     ],
   },
   {
-    _id: ObjectId("000000000000000000000004"),
+    _id: "000000000000000000000004",
     kanji: "挑戦",
     hiragana: "ちょうせん",
     romaji: "chousen",
@@ -59,7 +59,7 @@ localDb.words.insertMany([
     ],
   },
   {
-    _id: ObjectId("000000000000000000000005"),
+    _id: "000000000000000000000005",
     kanji: "曖昧",
     hiragana: "あいまい",
     romaji: "aimai",
@@ -81,7 +81,7 @@ localDb.grammars.drop();
 
 localDb.grammars.insertMany([
   {
-    _id: ObjectId("000000000000000000000011"),
+    _id: "000000000000000000000011",
     title: "〜てもいい",
     structure: "Verb て-form + もいい",
     meaning: "It's okay to …; may I …",
@@ -92,7 +92,7 @@ localDb.grammars.insertMany([
     ],
   },
   {
-    _id: ObjectId("000000000000000000000012"),
+    _id: "000000000000000000000012",
     title: "〜ば〜ほど",
     structure: "Verb ば-form + Verb dictionary form + ほど",
     meaning: "The more … the more …",
@@ -103,7 +103,7 @@ localDb.grammars.insertMany([
     ],
   },
   {
-    _id: ObjectId("000000000000000000000013"),
+    _id: "000000000000000000000013",
     title: "〜わけがない",
     structure: "Verb plain form + わけがない",
     meaning: "There's no way that …",
@@ -123,7 +123,7 @@ print("✅  Inserted 3 grammars into 'grammars' collection.");
 localDb.users.drop();
 
 localDb.users.insertOne({
-  _id: ObjectId("000000000000000000000099"),
+  _id: "000000000000000000000099",
   google_id: "bench-google-id",
   email: "bench@test.com",
   name: "Benchmark User",
