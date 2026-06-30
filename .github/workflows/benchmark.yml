@@ -10,6 +10,9 @@ on:
 jobs:
   benchmark:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: read
 
     services:
       mongo:
@@ -173,9 +176,9 @@ jobs:
               '',
               '| Metric | Health Check | API Endpoints | Stress Test |',
               '|--------|-------------|---------------|-------------|',
-              `| **p50 Latency** | ${fmt(healthDuration['p(50)'])} | ${fmt(apiDuration['p(50)'])} | ${fmt(stressDuration['p(50)'])} |`,
+              `| **p50 Latency** | ${fmt(healthDuration.med)} | ${fmt(apiDuration.med)} | ${fmt(stressDuration.med)} |`,
               `| **p95 Latency** | ${fmt(healthDuration['p(95)'])} | ${fmt(apiDuration['p(95)'])} | ${fmt(stressDuration['p(95)'])} |`,
-              `| **p99 Latency** | ${fmt(healthDuration['p(99)'])} | ${fmt(apiDuration['p(99)'])} | ${fmt(stressDuration['p(99)'])} |`,
+              `| **p90 Latency** | ${fmt(healthDuration['p(90)'])} | ${fmt(apiDuration['p(90)'])} | ${fmt(stressDuration['p(90)'])} |`,
               `| **Max Latency** | ${fmt(healthDuration.max)} | ${fmt(apiDuration.max)} | ${fmt(stressDuration.max)} |`,
               `| **Avg Latency** | ${fmt(healthDuration.avg)} | ${fmt(apiDuration.avg)} | ${fmt(stressDuration.avg)} |`,
               `| **Min Latency** | ${fmt(healthDuration.min)} | ${fmt(apiDuration.min)} | ${fmt(stressDuration.min)} |`,
