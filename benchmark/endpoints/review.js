@@ -5,8 +5,8 @@ import { customMetrics, recordMetrics } from '../helpers/metrics.js';
 import { generateAuthToken, getAuthHeaders, checkServerReachability } from '../helpers/auth.js';
 
 export const options = {
-  vus: 10,
-  duration: '10s',
+  vus: 50,
+  duration: '1m',
   thresholds: defaultThresholds,
 };
 
@@ -57,6 +57,4 @@ export default function (data) {
   }
 
   recordMetrics(res, customMetrics.reviewDuration, success);
-
-  sleep(1);
 }
