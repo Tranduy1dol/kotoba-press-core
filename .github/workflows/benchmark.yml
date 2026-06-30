@@ -49,7 +49,7 @@ jobs:
         run: go build -o ./api-server ./cmd/api
 
       - name: Seed test data
-        run: mongosh mongodb://localhost:27017/learning_japanese benchmark/seed/seed.js
+        run: docker run --rm --network host -v ${{ github.workspace }}/benchmark/seed/seed.js:/seed.js mongo:7 mongosh mongodb://localhost:27017/learning_japanese /seed.js
 
       - name: Create results directory
         run: mkdir -p benchmark/results
